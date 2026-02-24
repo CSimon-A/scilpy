@@ -357,8 +357,8 @@ def perform_tractogram_operation_on_lines(operation, streamlines, precision=None
             nb_resample_pts = 64
         if bidirectional is None:
             bidirectional = True
-        return operation(streamlines, precision, 
-                         nb_resample_pts=nb_resample_pts, 
+        return operation(streamlines, precision,
+                         nb_resample_pts=nb_resample_pts,
                          bidirectional=bidirectional)
     else:
         # Hash the streamlines using the desired precision.
@@ -397,15 +397,15 @@ def difference_robust(streamlines_list, precision=3,
     return streamlines_fused[indices], indices
 
 
-def union_robust(streamlines_list, precision=3, 
+def union_robust(streamlines_list, precision=3,
                  nb_resample_pts=64, bidirectional=True):
     """ Union of a list of lists of streamlines """
     if not isinstance(streamlines_list, list):
         streamlines_list = [streamlines_list]
     streamlines_fused, indices = _find_identical_streamlines(
-        streamlines_list, epsilon=10**(-precision), union_mode=True, 
+        streamlines_list, epsilon=10**(-precision), union_mode=True,
         nb_resample_pts=nb_resample_pts, bidirectional=bidirectional,
-        )
+    )
     return streamlines_fused[indices], indices
 
 
@@ -482,7 +482,7 @@ def _find_identical_streamlines(streamlines_list, epsilon=0.001,
     adjacency = fss.radius_search(streamlines, radius=epsilon)
 
     # Compute connected components:
-    # If: A ~ B and B ~ C, 
+    # If: A ~ B and B ~ C,
     # then all 3 become one component.
     n_components, labels = connected_components(
         csgraph=adjacency, directed=False)
