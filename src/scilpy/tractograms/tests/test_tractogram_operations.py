@@ -207,6 +207,30 @@ def test_robust_operations():
     )
     assert len(out_union_rev) == 1, "Union failed to merge reversed streamlines."
 
+    # -------------------------------------------------------------------------
+    # PART 4: Variable point count (resampling) testing
+    # Verifying that geometrically identical streamlines with different
+    # numbers of vertices are correctly matched via nb_resample_pts.
+    # -------------------------------------------------------------------------
+    line_sparse = np.array([[0., 0., 0.], [1., 1., 1.], [2., 2., 2.]])
+    line_dense = np.array([[0., 0., 0.], [0.5, 0.5, 0.5], [1., 1., 1.],
+                           [1.5, 1.5, 1.5], [2., 2., 2.]])
+
+    set_sparse = [line_sparse]
+    set_dense = [line_dense]
+
+    # Intersection: should match despite different point counts
+    out_int_resample, ind_int_resample = perform_tractogram_operation_on_lines(
+        intersection_robust, [set_sparse, set_dense], precision=precision_strict
+    )
+    assert len(out_int_resample) == 1, "Failed to match identical lines with different point counts."
+
+    # Difference: should yield nothing since they represent the same geometry
+    out_diff_resample, ind_diff_resample = perform_tractogram_operation_on_lines(
+        difference_robust, [set_sparse, set_dense], precision=precision_strict
+    )
+    assert len(out_diff_resample) == 0, "Failed to deduplicate lines with different point counts."
+
 
 def test_concatenate_sft():
     # Testing with different metadata
